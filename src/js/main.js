@@ -2,10 +2,10 @@ window.onload=()=>{
     gentable();
 }
 window.onkeydown=(e)=>{
-    if(e.key == 'ArrowRight') moveRight();
-    else if(e.key == 'ArrowLeft') moveLeft();
-    else if(e.key == 'ArrowDown') moveDown();
-    else if(e.key == 'ArrowUp') moveUp();
+    if(e.key == 'ArrowRight') moveRight(1);
+    else if(e.key == 'ArrowLeft') moveLeft(1);
+    else if(e.key == 'ArrowDown') moveDown(1);
+    else if(e.key == 'ArrowUp') moveUp(1);
     console.log(e.key);
 }
 table = new Array();
@@ -62,8 +62,10 @@ function gentable() {
 
 function generateRandom(){
     var rand = randomChooseIdle();
-    rand.idle = 0;
-    rand.item.innerText = 2;
+    if(rand != null){
+        rand.idle = 0;
+        rand.item.innerText = 2;
+    }
 }
 
 function getUsingItems(){
@@ -79,6 +81,7 @@ function randomChooseIdle(){
     tableItem.map((i)=>{
         if(i.idle == 1) IdleItems.push(i);
     });
+    if(IdleItems.length == 0) return null;
     return IdleItems[Math.floor(Math.random() * IdleItems.length)];
 }
 
@@ -103,7 +106,13 @@ function moveItem(srcitem, destitem){
     srcitem.idle = 1;
 }
 
-function moveRight(){
+function addItem(srcitem, destitem){
+    destitem.item.innerText = srcitem.item.innerText * 2;
+    srcitem.item.innerText = 0;
+    srcitem.idle = 1;
+}
+
+function moveRight(flag){
     fetchValue();
     using = getUsingItems();
     using.map((i)=>{
@@ -115,30 +124,175 @@ function moveRight(){
                     break;
                 }
                 if(tmp.right == null && tmp.idle == 0){
+                    if(tmp.item.innerText == i.item.innerText){
+                        addItem(i, tmp);
+                    }
                     break;
                 }
                 if(tmp.idle == 0){
+                    if(tmp.item.innerText == i.item.innerText){
+                        addItem(i, tmp);
+                    }
                     break;
                 }
                 if(tmp.idle == 1 && tmp.right.idle == 1){
                     tmp = tmp.right;
+                    continue;
                 }
                 if(tmp.idle == 1 && tmp.right.idle == 0){
-                    moveItem(i, tmp);
+                    if(tmp.right.item.innerText == i.item.innerText){
+                        addItem(i, tmp.right);
+                    }else{
+                        moveItem(i, tmp);
+                    }
                     break;
                 }
             }
         }
     });
     generateRandom();
+    if(flag > 0){
+        moveRight(flag - 1);
+    }else{
+        return;
+    }
 
 }
-function moveLeft(){
+function moveLeft(flag){
+    fetchValue();
+    using = getUsingItems();
+    using.map((i)=>{
+        if(i.left != null){
+            var tmp = i.left;
+            while(1){
+                if(tmp.left == null && tmp.idle == 1){
+                    moveItem(i, tmp);
+                    break;
+                }
+                if(tmp.left == null && tmp.idle == 0){
+                    if(tmp.item.innerText == i.item.innerText){
+                        addItem(i, tmp);
+                    }
+                    break;
+                }
+                if(tmp.idle == 0){
+                    if(tmp.item.innerText == i.item.innerText){
+                        addItem(i, tmp);
+                    }
+                    break;
+                }
+                if(tmp.idle == 1 && tmp.left.idle == 1){
+                    tmp = tmp.left;
+                    continue;
+                }
+                if(tmp.idle == 1 && tmp.left.idle == 0){
+                    if(tmp.left.item.innerText == i.item.innerText){
+                        addItem(i, tmp.left);
+                    }else{
+                        moveItem(i, tmp);
+                    }
+                    break;
+                }
+            }
+        }
+    });
+    generateRandom();
+    if(flag > 0){
+        moveLeft(flag - 1);
+    }else{
+        return;
+    }
 
 }
-function moveDown(){
+function moveDown(flag){
+    fetchValue();
+    using = getUsingItems();
+    using.map((i)=>{
+        if(i.down != null){
+            var tmp = i.down;
+            while(1){
+                if(tmp.down == null && tmp.idle == 1){
+                    moveItem(i, tmp);
+                    break;
+                }
+                if(tmp.down == null && tmp.idle == 0){
+                    if(tmp.item.innerText == i.item.innerText){
+                        addItem(i, tmp);
+                    }
+                    break;
+                }
+                if(tmp.idle == 0){
+                    if(tmp.item.innerText == i.item.innerText){
+                        addItem(i, tmp);
+                    }
+                    break;
+                }
+                if(tmp.idle == 1 && tmp.down.idle == 1){
+                    tmp = tmp.down;
+                    continue;
+                }
+                if(tmp.idle == 1 && tmp.down.idle == 0){
+                    if(tmp.down.item.innerText == i.item.innerText){
+                        addItem(i, tmp.down);
+                    }else{
+                        moveItem(i, tmp);
+                    }
+                    break;
+                }
+            }
+        }
+    });
+    generateRandom();
+    if(flag > 0){
+        moveDown(flag -1);
+    }else{
+        return;
+    }
 
 }
-function moveUp(){
+function moveUp(flag){
+    fetchValue();
+    using = getUsingItems();
+    using.map((i)=>{
+        if(i.up != null){
+            var tmp = i.up;
+            while(1){
+                if(tmp.up == null && tmp.idle == 1){
+                    moveItem(i, tmp);
+                    break;
+                }
+                if(tmp.up == null && tmp.idle == 0){
+                    if(tmp.item.innerText == i.item.innerText){
+                        addItem(i, tmp);
+                    }
+                    break;
+                }
+                if(tmp.idle == 0){
+                    if(tmp.item.innerText == i.item.innerText){
+                        addItem(i, tmp);
+                    }
+                    break;
+                }
+                if(tmp.idle == 1 && tmp.up.idle == 1){
+                    tmp = tmp.up;
+                    continue;
+                }
+                if(tmp.idle == 1 && tmp.up.idle == 0){
+                    if(tmp.up.item.innerText == i.item.innerText){
+                        addItem(i, tmp.up);
+                    }else{
+                        moveItem(i, tmp);
+                    }
+                    break;
+                }
+            }
+        }
+    });
+    generateRandom();
+    if(flag > 0){
+        moveUp(flag - 1);
+    }else{
+        return;
+    }
 
 }
